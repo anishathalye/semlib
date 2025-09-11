@@ -1,0 +1,74 @@
+name: Docs
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * 6'
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    env:
+      JUPYTER_PLATFORM_DIRS: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: pypa/hatch@install
+      - name: Build docs
+        run: hatch run docs:build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./site
+  deploy:
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-24.04
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+  links:
+    runs-on: ubuntu-24.04
+    needs: build
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: github-pages
+          path: ./artifact
+      - name: Extract artifact
+        run: |
+          mkdir -p ./site
+          cd ./artifact
+          tar -xf artifact.tar -C ../site
+      - uses: anishathalye/proof-html@v2
+        with:
+          check_html: false
+          check_css: false
+          directory: ./site
+          tokens: |
+            {"https://github.com": "${{ secrets.GITHUB_TOKEN }}"}
+          swap_urls: |
+            {"^https:\\/\\/semlib\\.anish\\.io/": "/",
+             "^(https:\\/\\/github\\.com/.*)#.*$": "\\1"}
+          allow_missing_href: true
+          ignore_url: |
+            https://fonts.gstatic.com
+            https://platform.openai.com/docs/guides/structured-outputs
+            https://openai.com/index/api-prompt-caching/

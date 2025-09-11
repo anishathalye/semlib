@@ -1,0 +1,97 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "semlib"
+authors = [
+  { name = "Anish Athalye", email = "me@anishathalye.com" },
+]
+description = "Data processing and analysis pipelines with LLMs"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Utilities",
+]
+dynamic = ["version"]
+dependencies = [
+  "litellm>=1.75,<2",
+  "pydantic>=2.5,<3",
+]
+
+[project.urls]
+homepage = "https://github.com/anishathalye/semlib"
+repository = "https://github.com/anishathalye/semlib.git"
+issues = "https://github.com/anishathalye/semlib/issues"
+
+[tool.hatch.version]
+path = "src/semlib/__about__.py"
+
+[tool.hatch.envs.default]
+installer = "uv"
+
+[[tool.hatch.envs.hatch-test.matrix]]
+python = ["3.12", "3.13", "pypy3.12"]
+
+[tool.coverage.run]
+omit = [
+  "*/tests/*",
+]
+
+[tool.hatch.envs.hatch-test]
+extra-dependencies = [
+  "pytest-asyncio",
+]
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+  "nbqa",
+  "pytest",
+  "pytest-asyncio",
+]
+
+[tool.hatch.envs.types.scripts]
+check = "mypy --strict {args:src tests}"
+check-docs = "nbqa mypy --disable-error-code=top-level-await --ignore-missing-imports {args:docs}"
+
+[tool.hatch.envs.coverage]
+detached = true
+installer = "uv"
+dependencies = [
+  "coverage",
+]
+
+[tool.hatch.envs.coverage.scripts]
+html = "coverage html"
+xml = "coverage xml"
+
+[tool.hatch.envs.docs]
+extra-dependencies = [
+  "mkdocs-jupyter>=0.25.1,<0.26",
+  "mkdocs-material[imaging]>=9.6,<10",
+  "mkdocs>=1.6.1,<2",
+  "mkdocstrings[python]>=0.30,<0.31",
+  "ruff>=0.12,<0.13",
+]
+
+[tool.hatch.envs.docs.scripts]
+build = "mkdocs build"
+serve = "mkdocs serve"
+
+[tool.ruff]
+extend-include = [
+  "*.ipynb"
+]
+
+[tool.ruff.lint.extend-per-file-ignores]
+"*.ipynb" = [
+  "T201", # print
+  "PLE1142", # top-level await
+]

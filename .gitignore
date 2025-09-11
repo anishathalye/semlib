@@ -1,0 +1,6 @@
+*.pyc
+dist/
+.coverage*
+coverage.xml
+site/
+.cache/

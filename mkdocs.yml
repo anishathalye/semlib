@@ -1,0 +1,100 @@
+site_name: Semlib
+site_description: "Semlib: A Python library for building data processing and analysis pipelines with LLMs."
+site_url: https://semlib.anish.io/
+repo_url: https://github.com/anishathalye/semlib
+repo_name: anishathalye/semlib
+
+exclude_docs: |
+  overrides/
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  icon:
+    repo: material/github
+    logo: material/brain
+  favicon: images/brain.png
+  features:
+    - content.code.copy
+    - toc.follow
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+extra:
+  generator: false
+
+plugins:
+  - search
+  - social
+  - mkdocstrings:
+      handlers:
+        python:
+          inventories:
+            - https://docs.python.org/3/objects.inv
+            - https://docs.pydantic.dev/latest/objects.inv
+          options:
+            docstring_style: google
+            show_source: true
+            inherited_members: true
+            show_symbol_type_toc: true
+            show_signature_annotations: true
+            separate_signature: true
+            overloads_only: true
+            signature_crossrefs: true
+            show_signature_type_parameters: true
+  - mkdocs-jupyter:
+      include_source: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+watch:
+  - src
+
+nav:
+  - Home:
+    - Overview: index.md
+    - Quickstart: quickstart.ipynb
+    - Library Design: design.md
+  - Examples:
+    - Overview: examples/index.md
+    - Disneyland Reviews Synthesis: examples/disneyland-reviews/index.ipynb
+    - arXiv Paper Recommendations: examples/arxiv-recommendations/index.ipynb
+    - Airline Support Report: examples/airline-support/index.ipynb
+    - Resume Filtering: examples/resume-filtering/index.ipynb
+  - API Reference:
+    - semlib: api/index.md
+    - semlib.apply: api/apply.md
+    - semlib.compare: api/compare.md
+    - semlib.extrema: api/extrema.md
+    - semlib.filter: api/filter.md
+    - semlib.find: api/find.md
+    - semlib.map: api/map.md
+    - semlib.prompt: api/prompt.md
+    - semlib.reduce: api/reduce.md
+    - semlib.sort: api/sort.md

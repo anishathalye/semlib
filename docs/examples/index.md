@@ -1,0 +1,8 @@
+# Overview
+
+This section of the documentation has downloadable Jupyter notebooks that demonstrate various aspects of Semlib's functionality.
+
+- [**Disneyland Reviews Synthesis**](./disneyland-reviews/index.ipynb). This notebook analyzes tens of thousands of Disneyland reviews to produce a list of top complaints, ordered by frequency, with citations. The notebook demonstrates a sophisticated multi-stage processing pipeline that includes [map][semlib.Session.map], [reduce][semlib.Session.reduce], [apply][semlib.Session.apply], and non-semantic operations.
+- [**arXiv Paper Recommendations**](./arxiv-recommendations/index.ipynb). This notebook analyzes the latest papers published on [arXiv](https://arxiv.org/) and surfaces reading recommendations based on your interests. The notebook demonstrates a pipeline that includes semantic [filter][semlib.Session.filter] and [sort][semlib.Session.sort] operations.
+- [**Airline Support Report**](./airline-support/index.ipynb). This notebook analyzes a large number of airline support tickets and produces a report summarizing complaints. The notebook is directly translated from a DocETL example, allowing for a direct comparison between the systems.
+- [**Resume Filtering**](./resume-filtering/index.ipynb). This notebook analyzes PDF resumes, extracts structured data, and filters the resumes according to a criteria. The notebook demonstrates processing PDFs using an open-source PDF-to-Markdown conversion tool, using Semlib with local models using [Ollama](https://ollama.com/), and using a series of [map][semlib.Session.map]s to implement a model cascade in Semlib.
