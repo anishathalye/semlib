@@ -49,8 +49,6 @@ Read more about the rationale, the story behind this library, and related work i
 
 ## Citation
 
-If you use Semlib in any way in academic work, please cite the following:
-
 ```bibtex
 @misc{athalye:semlib,
   author = {Anish Athalye},
