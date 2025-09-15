@@ -13,8 +13,8 @@ Semlib is a Python library for building data processing and data analysis pipeli
 ...     return_type=Bare(list[str])
 ... )
 
->>> await sort(presidents, by="right-leaning")
-['Jimmy Carter', 'Bill Clinton', 'George H. W. Bush', 'Ronald Reagan']
+>>> await sort(presidents, by="right-leaning", reverse=True)  # highest first
+['Ronald Reagan', 'George H. W. Bush', 'Bill Clinton', 'Jimmy Carter']
 
 >>> await find(presidents, by="former actor")
 'Ronald Reagan'
