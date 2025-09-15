@@ -1,5 +1,5 @@
 ---
-title: "Semlib: LLM-Powered Data Processing"
+title: "Semlib: Semantic Data Processing"
 description: A Python library for building data processing and analysis pipelines with LLMs.
 ---
 
@@ -53,7 +53,7 @@ Read more about the rationale, the story behind this library, and related work i
 ```bibtex
 @misc{athalye:semlib,
   author = {Anish Athalye},
-  title = {{Semlib}: LLM-powered data processing for {Python}},
+  title = {{Semlib}: Semantic data processing for {Python}},
   year = {2025},
   howpublished = {\url{https://github.com/anishathalye/semlib}},
 }

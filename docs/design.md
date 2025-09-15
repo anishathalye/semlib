@@ -1,5 +1,5 @@
 ---
-description: Learn about Semlib's design principles, type system, async patterns, and structured output handling for LLM-powered data processing.
+description: Learn about Semlib's design principles, type system, async patterns, and structured output handling for semantic data processing.
 ---
 
 # Library Design

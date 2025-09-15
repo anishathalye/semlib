@@ -52,7 +52,7 @@ Read more about the rationale, the story behind this library, and related work i
 ```bibtex
 @misc{athalye:semlib,
   author = {Anish Athalye},
-  title = {{Semlib}: LLM-powered data processing for {Python}},
+  title = {{Semlib}: Semantic data processing for {Python}},
   year = {2025},
   howpublished = {\url{https://github.com/anishathalye/semlib}},
 }
