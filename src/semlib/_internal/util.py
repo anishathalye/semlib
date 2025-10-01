@@ -40,15 +40,12 @@ async def foreach[T](fn: Callable[[T], Awaitable[None]], iterable: Iterable[T], 
 
 
 async def gather[T](*coros: Coroutine[Any, Any, T]) -> list[T]:
-    tasks: list[asyncio.Task[T]] = [asyncio.create_task(coro) for coro in coros]
     try:
-        return await asyncio.gather(*tasks)
-    except Exception:
-        for task in tasks:
-            if not task.done():
-                task.cancel()
-        await asyncio.wait(tasks)
-        raise
+        async with asyncio.TaskGroup() as tg:
+            tasks: list[asyncio.Task[T]] = [tg.create_task(coro) for coro in coros]
+        return [t.result() for t in tasks]
+    except ExceptionGroup as eg:
+        raise eg.exceptions[0] from eg
 
 
 def parse_max_concurrency(max_concurrency: int | None, model: str | None) -> int:
