@@ -4,3 +4,4 @@ dist/
 coverage.xml
 site/
 .cache/
+.idea/
