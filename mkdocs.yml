@@ -63,6 +63,20 @@ plugins:
             show_signature_type_parameters: true
   - mkdocs-jupyter:
       include_source: true
+  - llmstxt:
+      markdown_description: "Semlib is a Python library for building data processing and data analysis pipelines that leverage the power of large language models (LLMs). Semlib provides, as building blocks, familiar functional programming primitives like map, reduce, sort, and filter, but with a twist: Semlib's implementation of these operations are programmed with natural language descriptions rather than code. Under the hood, Semlib handles complexities such as prompting, parsing, concurrency control, caching, and cost tracking."
+      full_output: llms-full.txt
+      sections:
+        Home:
+          - index.md: Overview of Semlib, including rationale and core concepts
+          - quickstart.ipynb: Quickstart guide and tutorial
+          - design.md: Library design documentation
+        Examples:
+          - examples/index.md: Overview of examples
+          - "examples/**/*.ipynb"
+        API Reference:
+          - api/index.md: API reference overview
+          - "api/*.md"
 
 markdown_extensions:
   - pymdownx.highlight:

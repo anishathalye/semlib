@@ -48,6 +48,17 @@ This library provides an alternative. You can structure your computation using t
 
 Read more about the rationale, the story behind this library, and related work in the [**blog post**](https://anishathalye.com/semlib/).
 
+## `llms.txt`
+
+This documentation is available in [`llms.txt`](https://llmstxt.org/) format, a Markdown-based format optimized for LLMs and AI coding assistants.
+
+Two versions are available:
+
+- [`llms.txt`](https://semlib.anish.io/llms.txt) contains a description of the project and links to all documentation sections.
+- [`llms-full.txt`](https://semlib.anish.io/llms-full.txt) includes the complete content of all documentation pages. Note that this may be too large for some LLMs.
+
+These files are not currently automatically used by IDEs or coding agents, but you can provide the full text or link to them when using AI tools.
+
 ## Citation
 
 ```bibtex
