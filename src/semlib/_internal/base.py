@@ -2,12 +2,12 @@ import asyncio
 import os
 from typing import cast, overload
 
-import litellm
 from litellm.types.utils import Message
 from pydantic import BaseModel
 from pydantic_core import ValidationError  # noqa: F401 # used in docstrings
 
 from semlib._internal.constants import DEFAULT_MODEL
+from semlib._internal.llms.llm_client import LLMClient
 from semlib._internal.util import parse_max_concurrency
 from semlib.bare import Bare
 from semlib.cache import QueryCache
@@ -44,6 +44,7 @@ class Base:
         self._pending_requests: set[bytes] = set()
         self._cond = asyncio.Condition()  # for pending requests deduplication
         self._cache = cache
+        self._llm_client = LLMClient()
 
         self._total_cost: float = 0.0
 
@@ -110,8 +111,8 @@ class Base:
             kwargs = {"response_format": return_type}
         try:
             async with self._sem:
-                response = await litellm.acompletion(model=model, messages=messages, **kwargs)
-            self._add_cost(litellm.completion_cost(response))  # type: ignore[attr-defined]
+                response = await self._llm_client.acompletion(model=model, messages=messages, **kwargs)
+            self._add_cost(self._llm_client.completion_cost(response))
             content = cast(str, response.choices[0].message.content)
             if return_type is None:
                 typed_response: str | T | U = content
