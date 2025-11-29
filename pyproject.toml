@@ -66,7 +66,7 @@ check-docs = "nbqa mypy --disable-error-code=top-level-await --ignore-missing-im
 detached = true
 installer = "uv"
 dependencies = [
-  "coverage",
+  "coverage[toml]",
 ]
 
 [tool.hatch.envs.coverage.scripts]
