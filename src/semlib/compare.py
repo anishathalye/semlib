@@ -239,20 +239,20 @@ class Compare(Base):
 
         match task:
             case Task.COMPARE:
-                strict_compare_result = cast(_StrictCompareResult, response)
+                strict_compare_result = cast("_StrictCompareResult", response)
                 return strict_compare_result.order.to_order()
             case Task.COMPARE_OR_ABSTAIN:
-                compare_result = cast(_CompareResult, response)
+                compare_result = cast("_CompareResult", response)
                 return compare_result.order
             case Task.CHOOSE_GREATER:
-                strict_choose_result = cast(_StrictChooseResult, response)
+                strict_choose_result = cast("_StrictChooseResult", response)
                 match strict_choose_result.choice:
                     case _StrictChoice.A:
                         return Order.GREATER
                     case _StrictChoice.B:
                         return Order.LESS
             case Task.CHOOSE_GREATER_OR_ABSTAIN:
-                choose_result = cast(_ChooseResult, response)
+                choose_result = cast("_ChooseResult", response)
                 match choose_result.choice:
                     case _Choice.A:
                         return Order.GREATER
@@ -261,14 +261,14 @@ class Compare(Base):
                     case _Choice.NEITHER:
                         return Order.NEITHER
             case Task.CHOOSE_LESSER:
-                strict_choose_result = cast(_StrictChooseResult, response)
+                strict_choose_result = cast("_StrictChooseResult", response)
                 match strict_choose_result.choice:
                     case _StrictChoice.A:
                         return Order.LESS
                     case _StrictChoice.B:
                         return Order.GREATER
             case Task.CHOOSE_LESSER_OR_ABSTAIN:
-                choose_result = cast(_ChooseResult, response)
+                choose_result = cast("_ChooseResult", response)
                 match choose_result.choice:
                     case _Choice.A:
                         return Order.LESS

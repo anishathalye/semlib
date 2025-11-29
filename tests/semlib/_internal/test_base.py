@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import os
 from collections.abc import Callable
 from typing import Any
 from unittest.mock import AsyncMock, patch
@@ -178,8 +179,6 @@ async def test_prompt_bare_cached(llm_mocker: Callable[[dict[str, str]], LLMMock
 
 
 def test_base_env_max_concurrency() -> None:
-    import os
-
     os.environ["SEMLIB_MAX_CONCURRENCY"] = "7"
     base = Base()
     assert base._max_concurrency == 7  # noqa: SLF001

@@ -111,8 +111,8 @@ class Base:
         try:
             async with self._sem:
                 response = await litellm.acompletion(model=model, messages=messages, **kwargs)
-            self._add_cost(litellm.completion_cost(response))  # type: ignore[attr-defined]
-            content = cast(str, response.choices[0].message.content)
+            self._add_cost(litellm.completion_cost(response))
+            content = cast("str", response.choices[0].message.content)
             if return_type is None:
                 typed_response: str | T | U = content
             elif isinstance(return_type, Bare):

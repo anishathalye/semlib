@@ -4,7 +4,7 @@ import pydantic
 import pytest
 
 from semlib.compare import _DEFAULT_TEMPLATE, _DEFAULT_TEMPLATE_BY
-from semlib.extrema import max, max_sync, min, min_sync
+from semlib.extrema import max, max_sync, min, min_sync  # noqa: A004
 from tests.conftest import LLMMocker
 
 

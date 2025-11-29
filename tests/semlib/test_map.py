@@ -8,7 +8,7 @@ import pydantic
 import pytest
 
 from semlib.bare import Bare
-from semlib.map import map, map_sync
+from semlib.map import map, map_sync  # noqa: A004
 from tests.conftest import LLMMocker
 
 

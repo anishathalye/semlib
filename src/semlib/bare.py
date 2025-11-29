@@ -44,6 +44,6 @@ class Bare[T]:
 
     def _extract(self, obj: Any) -> T:
         if isinstance(obj, self._model):
-            return cast(T, getattr(obj, self._field_name))
+            return cast("T", getattr(obj, self._field_name))
         msg = f"expected instance of {self._model.__name__}, got {type(obj).__name__}"
         raise TypeError(msg)

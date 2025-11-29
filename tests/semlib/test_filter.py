@@ -3,7 +3,7 @@ from collections.abc import Callable
 import pydantic
 import pytest
 
-from semlib.filter import _DEFAULT_TEMPLATE, filter, filter_sync
+from semlib.filter import _DEFAULT_TEMPLATE, filter, filter_sync  # noqa: A004
 from tests.conftest import LLMMocker
 
 

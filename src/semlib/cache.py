@@ -118,7 +118,7 @@ class OnDiskCache(QueryCache):
         row = cur.fetchone()
         if row is None:
             return None
-        return cast(str, row[0])
+        return cast("str", row[0])
 
     @override
     def clear(self) -> None:
@@ -128,4 +128,4 @@ class OnDiskCache(QueryCache):
     def __len__(self) -> int:
         cur = self._conn.execute("SELECT COUNT(*) FROM data")
         row = cur.fetchone()
-        return cast(int, row[0])
+        return cast("int", row[0])
