@@ -59,7 +59,7 @@ extra-dependencies = [
 ]
 
 [tool.hatch.envs.types.scripts]
-check = "mypy --strict {args:src tests}"
+check = "mypy {args:src tests}"
 check-docs = "nbqa mypy --disable-error-code=top-level-await --ignore-missing-imports {args:docs}"
 
 [tool.hatch.envs.coverage]
@@ -86,6 +86,9 @@ extra-dependencies = [
 [tool.hatch.envs.docs.scripts]
 build = "mkdocs build"
 serve = "mkdocs serve"
+
+[tool.mypy]
+strict = true
 
 [tool.ruff]
 extend-include = [
