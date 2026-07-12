@@ -94,7 +94,9 @@ async def test_apply_async(llm_mocker: Callable[[dict[str, str]], LLMMocker]) ->
 
 
 @pytest.mark.asyncio
-async def test_apply_async_raises(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
+async def test_apply_async_raises(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker],
+) -> None:
     class Count(pydantic.BaseModel):
         count: int
 

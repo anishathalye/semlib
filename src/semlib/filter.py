@@ -98,7 +98,9 @@ class Filter(Map):
             # callable
             map_template = template
 
-        decisions = await self.map(iterable, map_template, return_type=_Decision, model=model)
+        decisions = await self.map(
+            iterable, map_template, return_type=_Decision, model=model
+        )
         return [
             item
             for item, decision in zip(iterable, decisions, strict=False)
@@ -119,7 +121,9 @@ async def filter[T](  # noqa: A001
 ) -> list[T]:
     """Standalone version of [filter][semlib.filter.Filter.filter]."""
     filterer = Filter(model=model, max_concurrency=max_concurrency)
-    return await filterer.filter(iterable, by=by, to_str=to_str, template=template, negate=negate)
+    return await filterer.filter(
+        iterable, by=by, to_str=to_str, template=template, negate=negate
+    )
 
 
 def filter_sync[T](
@@ -135,4 +139,8 @@ def filter_sync[T](
 ) -> list[T]:
     """Standalone synchronous version of [filter][semlib.filter.Filter.filter]."""
     filterer = Filter(model=model, max_concurrency=max_concurrency)
-    return asyncio.run(filterer.filter(iterable, by=by, to_str=to_str, template=template, negate=negate))
+    return asyncio.run(
+        filterer.filter(
+            iterable, by=by, to_str=to_str, template=template, negate=negate
+        )
+    )

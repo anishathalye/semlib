@@ -23,13 +23,16 @@ def test_map_str(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
 
     with mocker.patch_llm():
         result: list[str] = map_sync(
-            ["one", "two", "three"], "What is the number that comes after {}? Reply with a single number, e.g., '5'."
+            ["one", "two", "three"],
+            "What is the number that comes after {}? Reply with a single number, e.g., '5'.",
         )
 
     assert result == ["2", "3", "4"]
 
 
-def test_map_structured_output(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
+def test_map_structured_output(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker],
+) -> None:
     class Person(pydantic.BaseModel):
         name: str
         date_of_birth: datetime.date
@@ -45,18 +48,24 @@ def test_map_structured_output(llm_mocker: Callable[[dict[str, str]], LLMMocker]
 
     with mocker.patch_llm():
         result: list[Person] = map_sync(
-            [40, 41, 42, 43], "Who was the {}th president of the United States?", return_type=Person
+            [40, 41, 42, 43],
+            "Who was the {}th president of the United States?",
+            return_type=Person,
         )
 
     assert result == [
         Person(name="Ronald Reagan", date_of_birth=datetime.date(1911, 2, 6)),
         Person(name="George H. W. Bush", date_of_birth=datetime.date(1924, 6, 12)),
-        Person(name="William Jefferson Clinton", date_of_birth=datetime.date(1946, 8, 19)),
+        Person(
+            name="William Jefferson Clinton", date_of_birth=datetime.date(1946, 8, 19)
+        ),
         Person(name="George W. Bush", date_of_birth=datetime.date(1946, 7, 6)),
     ]
 
 
-def test_map_callable_formatter(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
+def test_map_callable_formatter(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker],
+) -> None:
     class Car(pydantic.BaseModel):
         make: str
         model: str
@@ -85,7 +94,11 @@ def test_map_callable_formatter(llm_mocker: Callable[[dict[str, str]], LLMMocker
     with mocker.patch_llm():
         result: list[Engine] = map_sync(cars, template, return_type=Engine)
 
-    assert result == [Engine(horsepower=203), Engine(horsepower=280), Engine(horsepower=475)]
+    assert result == [
+        Engine(horsepower=203),
+        Engine(horsepower=280),
+        Engine(horsepower=475),
+    ]
 
 
 @pytest.mark.asyncio
@@ -117,7 +130,11 @@ def test_map_raises(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
         value: int
 
     with mocker.patch_llm(), pytest.raises(pydantic.ValidationError):
-        map_sync(["one", "two", "three"], "What is the number that comes after {}?", return_type=Number)
+        map_sync(
+            ["one", "two", "three"],
+            "What is the number that comes after {}?",
+            return_type=Number,
+        )
 
 
 def test_map_bare(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
@@ -130,7 +147,11 @@ def test_map_bare(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
     )
 
     with mocker.patch_llm():
-        result = map_sync(["one", "two", "three"], "What is the number that comes after {}?", return_type=Bare(int))
+        result = map_sync(
+            ["one", "two", "three"],
+            "What is the number that comes after {}?",
+            return_type=Bare(int),
+        )
 
     assert result == [2, 3, 4]
 
@@ -156,7 +177,10 @@ async def test_map_task_cleanup_on_exception() -> None:
             task_cancelled.set()
             raise
 
-    with patch("litellm.acompletion", side_effect=mock_acompletion), patch("litellm.completion_cost", return_value=0.0):
+    with (
+        patch("litellm.acompletion", side_effect=mock_acompletion),
+        patch("litellm.completion_cost", return_value=0.0),
+    ):
         with pytest.raises(ValueError, match="Mock API error"):
             await map(["item_1", "item_2"], template="{}")
 

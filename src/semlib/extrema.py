@@ -41,9 +41,13 @@ class Extrema(Compare):
             mid = len(lst) // 2
             left, right = await util.gather(rec(lst[:mid]), rec(lst[mid:]))
             comparison = await compare(left, right)
-            if (find_min and comparison == Order.LESS) or (not find_min and comparison == Order.GREATER):
+            if (find_min and comparison == Order.LESS) or (
+                not find_min and comparison == Order.GREATER
+            ):
                 return left
-            if (find_min and comparison == Order.GREATER) or (not find_min and comparison == Order.LESS):
+            if (find_min and comparison == Order.GREATER) or (
+                not find_min and comparison == Order.LESS
+            ):
                 return right
             # neither is greater; we arbitrarily choose to be left-biased
             return left
@@ -176,7 +180,9 @@ async def min[T](  # noqa: A001
 ) -> T:
     """Standalone version of [min][semlib.extrema.Extrema.min]."""
     extrema = Extrema(model=model, max_concurrency=max_concurrency)
-    return await extrema.min(iterable, by=by, to_str=to_str, template=template, task=task)
+    return await extrema.min(
+        iterable, by=by, to_str=to_str, template=template, task=task
+    )
 
 
 def min_sync[T](
@@ -192,7 +198,9 @@ def min_sync[T](
 ) -> T:
     """Standalone synchronous version of [min][semlib.extrema.Extrema.min]."""
     extrema = Extrema(model=model, max_concurrency=max_concurrency)
-    return asyncio.run(extrema.min(iterable, by=by, to_str=to_str, template=template, task=task))
+    return asyncio.run(
+        extrema.min(iterable, by=by, to_str=to_str, template=template, task=task)
+    )
 
 
 async def max[T](  # noqa: A001
@@ -208,7 +216,9 @@ async def max[T](  # noqa: A001
 ) -> T:
     """Standalone version of [max][semlib.extrema.Extrema.max]."""
     extrema = Extrema(model=model, max_concurrency=max_concurrency)
-    return await extrema.max(iterable, by=by, to_str=to_str, template=template, task=task)
+    return await extrema.max(
+        iterable, by=by, to_str=to_str, template=template, task=task
+    )
 
 
 def max_sync[T](
@@ -224,4 +234,6 @@ def max_sync[T](
 ) -> T:
     """Standalone synchronous version of [max][semlib.extrema.Extrema.max]."""
     extrema = Extrema(model=model, max_concurrency=max_concurrency)
-    return asyncio.run(extrema.max(iterable, by=by, to_str=to_str, template=template, task=task))
+    return asyncio.run(
+        extrema.max(iterable, by=by, to_str=to_str, template=template, task=task)
+    )

@@ -110,13 +110,21 @@ class Map(Base):
         model = model if model is not None else self._model
         # case analysis for type checker
         if return_type is None:
-            return await util.gather(*[self.prompt(formatter(item), model=model) for item in iterable])
+            return await util.gather(
+                *[self.prompt(formatter(item), model=model) for item in iterable]
+            )
         if isinstance(return_type, Bare):
             return await util.gather(
-                *[self.prompt(formatter(item), return_type=return_type, model=model) for item in iterable]
+                *[
+                    self.prompt(formatter(item), return_type=return_type, model=model)
+                    for item in iterable
+                ]
             )
         return await util.gather(
-            *[self.prompt(formatter(item), return_type=return_type, model=model) for item in iterable]
+            *[
+                self.prompt(formatter(item), return_type=return_type, model=model)
+                for item in iterable
+            ]
         )
 
 

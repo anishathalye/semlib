@@ -248,7 +248,9 @@ class Reduce(Base):
                 msg = "reduce of empty iterable with no initial value"
                 raise ValueError(msg) from None
             for item in it:
-                acc = await self.prompt(formatter(acc, item), model=model, return_type=return_type)
+                acc = await self.prompt(
+                    formatter(acc, item), model=model, return_type=return_type
+                )
             return acc
         # associative
         items = list(iterable)
@@ -261,10 +263,16 @@ class Reduce(Base):
         left = items[:mid]
         right = items[mid:]
         left_acc, right_acc = await gather(
-            self._reduce1(left, template, return_type=return_type, associative=True, model=model),
-            self._reduce1(right, template, return_type=return_type, associative=True, model=model),
+            self._reduce1(
+                left, template, return_type=return_type, associative=True, model=model
+            ),
+            self._reduce1(
+                right, template, return_type=return_type, associative=True, model=model
+            ),
         )
-        return await self.prompt(formatter(left_acc, right_acc), model=model, return_type=return_type)
+        return await self.prompt(
+            formatter(left_acc, right_acc), model=model, return_type=return_type
+        )
 
     async def _reduce2(
         self,
@@ -279,7 +287,9 @@ class Reduce(Base):
         acc = initial
         formatter = template.format if isinstance(template, str) else template
         for item in iterable:
-            acc = await self.prompt(formatter(acc, item), model=model, return_type=return_type)
+            acc = await self.prompt(
+                formatter(acc, item), model=model, return_type=return_type
+            )
         return acc
 
 

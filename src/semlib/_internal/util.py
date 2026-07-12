@@ -12,7 +12,13 @@ class Poison:
 poison = Poison()
 
 
-async def foreach[T](fn: Callable[[T], Awaitable[None]], iterable: Iterable[T], /, *, max_concurrency: int) -> None:
+async def foreach[T](
+    fn: Callable[[T], Awaitable[None]],
+    iterable: Iterable[T],
+    /,
+    *,
+    max_concurrency: int,
+) -> None:
     q: asyncio.Queue[T | Poison] = asyncio.Queue(maxsize=max_concurrency)
 
     async def worker() -> None:

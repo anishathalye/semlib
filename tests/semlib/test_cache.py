@@ -38,7 +38,9 @@ def test_on_disk_cache(tmp_path: pathlib.Path) -> None:
 
     # check version mismatch
     conn = sqlite3.connect(str(cache_path), autocommit=True)
-    conn.execute(f"UPDATE metadata SET value = '{int(_VERSION) + 1}' WHERE key = '{_VERSION_KEY}'")
+    conn.execute(
+        f"UPDATE metadata SET value = '{int(_VERSION) + 1}' WHERE key = '{_VERSION_KEY}'"
+    )
     conn.close()
     with pytest.raises(ValueError, match="cache version mismatch"):
         OnDiskCache(str(cache_path))
@@ -56,8 +58,16 @@ def test_cache_interface(cache_type: str, tmp_path: pathlib.Path) -> None:
     class Foo(BaseModel):
         bar: int
 
-    key1: tuple[list[Message], None, str] = ([Message(role="user", content="Hello")], None, "gpt-4.1")
-    key2: tuple[list[Message], None, str] = ([Message(role="user", content="Hello")], None, "gpt-4o")  # different model
+    key1: tuple[list[Message], None, str] = (
+        [Message(role="user", content="Hello")],
+        None,
+        "gpt-4.1",
+    )
+    key2: tuple[list[Message], None, str] = (
+        [Message(role="user", content="Hello")],
+        None,
+        "gpt-4o",
+    )  # different model
     key3: tuple[list[Message], None, str] = (
         [Message(role="user", content="Hello"), Message(role="user", content="world")],
         None,

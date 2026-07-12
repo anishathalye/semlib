@@ -13,7 +13,13 @@ from tests.conftest import LLMMocker
 async def test_session(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
     session = Session(cache=InMemoryCache())
 
-    measurements: list[str] = ["1 mile", "1.4 kilometers", "1 foot", "3 inches", "3 centimeters"]
+    measurements: list[str] = [
+        "1 mile",
+        "1.4 kilometers",
+        "1 foot",
+        "3 inches",
+        "3 centimeters",
+    ]
 
     mocker = llm_mocker(
         {
@@ -22,21 +28,33 @@ async def test_session(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> Non
             _DEFAULT_TEMPLATE.format(a="1 mile", b="3 inches"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(a="1 mile", b="3 centimeters"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(a="1.4 kilometers", b="1 foot"): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE.format(a="1.4 kilometers", b="3 inches"): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE.format(a="1.4 kilometers", b="3 centimeters"): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE.format(
+                a="1.4 kilometers", b="3 inches"
+            ): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE.format(
+                a="1.4 kilometers", b="3 centimeters"
+            ): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(a="1 foot", b="3 inches"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(a="1 foot", b="3 centimeters"): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE.format(a="3 inches", b="3 centimeters"): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE.format(
+                a="3 inches", b="3 centimeters"
+            ): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(b="1 mile", a="1.4 kilometers"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 mile", a="1 foot"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 mile", a="3 inches"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 mile", a="3 centimeters"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1.4 kilometers", a="1 foot"): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE.format(b="1.4 kilometers", a="3 inches"): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE.format(b="1.4 kilometers", a="3 centimeters"): '{"choice": "B"}',
+            _DEFAULT_TEMPLATE.format(
+                b="1.4 kilometers", a="3 inches"
+            ): '{"choice": "B"}',
+            _DEFAULT_TEMPLATE.format(
+                b="1.4 kilometers", a="3 centimeters"
+            ): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 foot", a="3 inches"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 foot", a="3 centimeters"): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE.format(b="3 inches", a="3 centimeters"): '{"choice": "B"}',
+            _DEFAULT_TEMPLATE.format(
+                b="3 inches", a="3 centimeters"
+            ): '{"choice": "B"}',
             "Convert the length 1 mile to centimeters, rounding to the nearest integer.": '{"centimeters": 160934}',
             "Convert the length 1.4 kilometers to centimeters, rounding to the nearest integer.": '{"centimeters": 140000}',
             "Convert the length 1 foot to centimeters, rounding to the nearest integer.": '{"centimeters": 30}',
@@ -48,7 +66,13 @@ async def test_session(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> Non
     with mocker.patch_llm():
         sort_measurements: list[str] = await session.sort(measurements)
 
-    assert sort_measurements == ["3 centimeters", "3 inches", "1 foot", "1.4 kilometers", "1 mile"]
+    assert sort_measurements == [
+        "3 centimeters",
+        "3 inches",
+        "1 foot",
+        "1.4 kilometers",
+        "1 mile",
+    ]
     assert session.total_cost() == 20
 
     # running again should hit the cache and incur no additional cost

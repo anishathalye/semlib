@@ -15,7 +15,11 @@ from semlib.cache import QueryCache
 
 class Base:
     def __init__(
-        self, *, model: str | None = None, max_concurrency: int | None = None, cache: QueryCache | None = None
+        self,
+        *,
+        model: str | None = None,
+        max_concurrency: int | None = None,
+        cache: QueryCache | None = None,
     ):
         """Initialize.
 
@@ -33,7 +37,10 @@ class Base:
             ValueError: If `max_concurrency` is provided but is not a positive integer.
         """
         self._model = model or os.getenv("SEMLIB_DEFAULT_MODEL") or DEFAULT_MODEL
-        if max_concurrency is None and (env_max_concurrency := os.getenv("SEMLIB_MAX_CONCURRENCY")) is not None:
+        if (
+            max_concurrency is None
+            and (env_max_concurrency := os.getenv("SEMLIB_MAX_CONCURRENCY")) is not None
+        ):
             try:
                 max_concurrency = int(env_max_concurrency)
             except ValueError:
@@ -78,10 +85,18 @@ class Base:
     ) -> str: ...
 
     async def _acompletion[T: BaseModel, U](
-        self, *, messages: list[Message], model: str | None = None, return_type: type[T] | Bare[U] | None = None
+        self,
+        *,
+        messages: list[Message],
+        model: str | None = None,
+        return_type: type[T] | Bare[U] | None = None,
     ) -> str | T | U:
         model = model if model is not None else self._model
-        cache_key = (messages, return_type._model if isinstance(return_type, Bare) else return_type, model)  # noqa: SLF001
+        cache_key = (
+            messages,
+            return_type._model if isinstance(return_type, Bare) else return_type,
+            model,
+        )  # noqa: SLF001
 
         # check cache / pending requests
         if self._cache is not None:
@@ -96,7 +111,9 @@ class Base:
                     if return_type is None:
                         return cached_response
                     if isinstance(return_type, Bare):
-                        return return_type._extract(return_type._model.model_validate_json(cached_response))  # noqa: SLF001
+                        return return_type._extract(
+                            return_type._model.model_validate_json(cached_response)
+                        )  # noqa: SLF001
                     return return_type.model_validate_json(cached_response)
                 # if we've gotten to this point, we need to make a request; mark it as pending
                 self._pending_requests.add(hashed_key)
@@ -110,13 +127,17 @@ class Base:
             kwargs = {"response_format": return_type}
         try:
             async with self._sem:
-                response = await litellm.acompletion(model=model, messages=messages, **kwargs)
+                response = await litellm.acompletion(
+                    model=model, messages=messages, **kwargs
+                )
             self._add_cost(litellm.completion_cost(response))
             content = cast("str", response.choices[0].message.content)
             if return_type is None:
                 typed_response: str | T | U = content
             elif isinstance(return_type, Bare):
-                typed_response = return_type._extract(return_type._model.model_validate_json(content))  # noqa: SLF001
+                typed_response = return_type._extract(
+                    return_type._model.model_validate_json(content)
+                )  # noqa: SLF001
             else:
                 typed_response = return_type.model_validate_json(content)
             # cache after parsing, to ensure we don't cache a broken response
@@ -145,16 +166,27 @@ class Base:
             self._cache.clear()
 
     @overload
-    async def prompt[T: BaseModel](self, prompt: str, /, *, return_type: type[T], model: str | None = None) -> T: ...
+    async def prompt[T: BaseModel](
+        self, prompt: str, /, *, return_type: type[T], model: str | None = None
+    ) -> T: ...
 
     @overload
-    async def prompt[T](self, prompt: str, /, *, return_type: Bare[T], model: str | None = None) -> T: ...
+    async def prompt[T](
+        self, prompt: str, /, *, return_type: Bare[T], model: str | None = None
+    ) -> T: ...
 
     @overload
-    async def prompt(self, prompt: str, /, *, return_type: None = None, model: str | None = None) -> str: ...
+    async def prompt(
+        self, prompt: str, /, *, return_type: None = None, model: str | None = None
+    ) -> str: ...
 
     async def prompt[T: BaseModel, U](
-        self, prompt: str, /, *, return_type: type[T] | Bare[U] | None = None, model: str | None = None
+        self,
+        prompt: str,
+        /,
+        *,
+        return_type: type[T] | Bare[U] | None = None,
+        model: str | None = None,
     ) -> str | T | U:
         """Send a prompt to the language model and get a response.
 
@@ -193,5 +225,7 @@ class Base:
             4
         """
         return await self._acompletion(
-            messages=[Message(role="user", content=prompt)], return_type=return_type, model=model
+            messages=[Message(role="user", content=prompt)],
+            return_type=return_type,
+            model=model,
         )

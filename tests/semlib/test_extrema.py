@@ -48,7 +48,11 @@ def test_equal(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
         name: str
         age: int
 
-    people = [Person(name="Alice", age=30), Person(name="Bob", age=30), Person(name="Charlie", age=25)]
+    people = [
+        Person(name="Alice", age=30),
+        Person(name="Bob", age=30),
+        Person(name="Charlie", age=25),
+    ]
     mocker = llm_mocker(
         {
             _DEFAULT_TEMPLATE.format(a="30", b="30"): '{"choice": "neither"}',
@@ -57,7 +61,9 @@ def test_equal(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
     )
 
     with mocker.patch_llm():
-        oldest: Person = max_sync(people, to_str=lambda p: str(p.age), task="choose_greater_or_abstain")
+        oldest: Person = max_sync(
+            people, to_str=lambda p: str(p.age), task="choose_greater_or_abstain"
+        )
 
     assert oldest == people[0]  # left-biased
 
@@ -75,15 +81,25 @@ def test_min_max_callable(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> 
 
     mocker = llm_mocker(
         {
-            _DEFAULT_TEMPLATE_BY.format(a="Harvard", b="Stanford", criteria="endowment"): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE_BY.format(a="Stanford", b="MIT", criteria="endowment"): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE_BY.format(a="Harvard", b="MIT", criteria="endowment"): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE_BY.format(
+                a="Harvard", b="Stanford", criteria="endowment"
+            ): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE_BY.format(
+                a="Stanford", b="MIT", criteria="endowment"
+            ): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE_BY.format(
+                a="Harvard", b="MIT", criteria="endowment"
+            ): '{"choice": "A"}',
         }
     )
 
     with mocker.patch_llm():
-        biggest: University = max_sync(universities, by="endowment", to_str=lambda u: u.name)
-        smallest: University = min_sync(universities, by="endowment", to_str=lambda u: u.name)
+        biggest: University = max_sync(
+            universities, by="endowment", to_str=lambda u: u.name
+        )
+        smallest: University = min_sync(
+            universities, by="endowment", to_str=lambda u: u.name
+        )
 
     assert biggest == universities[0]  # Harvard
     assert smallest == universities[2]  # MIT

@@ -203,7 +203,11 @@ class Compare(Base):
             ... )
             <Order.GREATER: 'greater'>
         """
-        if task is not None and task not in {Task.CHOOSE_GREATER, Task.CHOOSE_GREATER_OR_ABSTAIN} and template is None:
+        if (
+            task is not None
+            and task not in {Task.CHOOSE_GREATER, Task.CHOOSE_GREATER_OR_ABSTAIN}
+            and template is None
+        ):
             msg = "if 'task' is not CHOOSE_GREATER or CHOOSE_GREATER_OR_ABSTAIN, 'template' must also be provided"
             raise ValueError(msg)
         if template is not None:
@@ -291,7 +295,9 @@ async def compare[T](
 ) -> Order:
     """Standalone version of [compare][semlib.compare.Compare.compare]."""
     comparator = Compare(model=model)
-    return await comparator.compare(a, b, by=by, to_str=to_str, template=template, task=task)
+    return await comparator.compare(
+        a, b, by=by, to_str=to_str, template=template, task=task
+    )
 
 
 def compare_sync[T](
@@ -307,4 +313,6 @@ def compare_sync[T](
 ) -> Order:
     """Standalone synchronous version of [compare][semlib.compare.Compare.compare]."""
     comparator = Compare(model=model)
-    return asyncio.run(comparator.compare(a, b, by=by, to_str=to_str, template=template, task=task))
+    return asyncio.run(
+        comparator.compare(a, b, by=by, to_str=to_str, template=template, task=task)
+    )

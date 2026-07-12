@@ -84,10 +84,15 @@ class Sort(Compare):
         algorithm = algorithm if algorithm is not None else BordaCount()
 
         async def comparator(a: T, b: T) -> Order:
-            return await self.compare(a, b, by=by, to_str=to_str, template=template, task=task, model=model)
+            return await self.compare(
+                a, b, by=by, to_str=to_str, template=template, task=task, model=model
+            )
 
         return await algorithm._sort(  # noqa: SLF001
-            iterable, reverse=reverse, comparator=comparator, max_concurrency=self._max_concurrency
+            iterable,
+            reverse=reverse,
+            comparator=comparator,
+            max_concurrency=self._max_concurrency,
         )
 
 
@@ -110,7 +115,13 @@ async def sort[T](
         max_concurrency=max_concurrency,
     )
     return await sorter.sort(
-        iterable, by=by, to_str=to_str, template=template, task=task, algorithm=algorithm, reverse=reverse
+        iterable,
+        by=by,
+        to_str=to_str,
+        template=template,
+        task=task,
+        algorithm=algorithm,
+        reverse=reverse,
     )
 
 
@@ -133,5 +144,13 @@ def sort_sync[T](
         max_concurrency=max_concurrency,
     )
     return asyncio.run(
-        sorter.sort(iterable, by=by, to_str=to_str, template=template, task=task, algorithm=algorithm, reverse=reverse)
+        sorter.sort(
+            iterable,
+            by=by,
+            to_str=to_str,
+            template=template,
+            task=task,
+            algorithm=algorithm,
+            reverse=reverse,
+        )
     )

@@ -19,11 +19,16 @@ def test_reduce_str(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
         }
     )
     with mocker.patch_llm():
-        result: str = reduce_sync(map(str, range(5)), template="What is {} + {}? Respond with just the number.")
+        result: str = reduce_sync(
+            map(str, range(5)),
+            template="What is {} + {}? Respond with just the number.",
+        )
     assert result == "10"
 
 
-def test_reduce_str_associative(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
+def test_reduce_str_associative(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker],
+) -> None:
     mocker = llm_mocker(
         {
             "What is 0 + 1? Respond with just the number.": "1",
@@ -34,14 +39,18 @@ def test_reduce_str_associative(llm_mocker: Callable[[dict[str, str]], LLMMocker
     )
     with mocker.patch_llm():
         result = reduce_sync(
-            map(str, range(5)), template="What is {} + {}? Respond with just the number.", associative=True
+            map(str, range(5)),
+            template="What is {} + {}? Respond with just the number.",
+            associative=True,
         )
     assert result == "10"
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("associative", [True, False])
-async def test_reduce_str_fn(llm_mocker: Callable[[dict[str, str]], LLMMocker], associative: bool) -> None:  # noqa: FBT001
+async def test_reduce_str_fn(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker], associative: bool
+) -> None:  # noqa: FBT001
     mocker = llm_mocker(
         {
             "What is 0 + 1? Respond with just the number.": "1",
@@ -79,7 +88,8 @@ async def test_reduce_t_fn(llm_mocker: Callable[[dict[str, str]], LLMMocker]) ->
     with mocker.patch_llm():
         result: Number = await reduce(
             (Number(value=n) for n in range(5)),
-            template=lambda a, b: f"What is {a.value} + {b.value}? Respond with just the number.",
+            template=lambda a,
+            b: f"What is {a.value} + {b.value}? Respond with just the number.",
             return_type=Number,
             associative=False,
         )
@@ -88,7 +98,9 @@ async def test_reduce_t_fn(llm_mocker: Callable[[dict[str, str]], LLMMocker]) ->
 
 
 @pytest.mark.asyncio
-async def test_reduce_t_fn_associative(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
+async def test_reduce_t_fn_associative(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker],
+) -> None:
     mocker = llm_mocker(
         {
             "What is 0 + 1? Respond with just the number.": '{"value": 1}',
@@ -104,7 +116,8 @@ async def test_reduce_t_fn_associative(llm_mocker: Callable[[dict[str, str]], LL
     with mocker.patch_llm():
         result: Number = await reduce(
             (Number(value=n) for n in range(5)),
-            template=lambda a, b: f"What is {a.value} + {b.value}? Respond with just the number.",
+            template=lambda a,
+            b: f"What is {a.value} + {b.value}? Respond with just the number.",
             return_type=Number,
             associative=True,
         )
@@ -114,7 +127,9 @@ async def test_reduce_t_fn_associative(llm_mocker: Callable[[dict[str, str]], LL
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("associative", [True, False])
-async def test_reduce_t(llm_mocker: Callable[[dict[str, str]], LLMMocker], associative: bool) -> None:  # noqa: FBT001
+async def test_reduce_t(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker], associative: bool
+) -> None:  # noqa: FBT001
     mocker = llm_mocker(
         {
             "What is value=0 + value=1? Respond with just the number.": '{"value": 1}',
@@ -163,7 +178,8 @@ def test_reduce_tu(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
     with mocker.patch_llm():
         result = reduce_sync(
             range(10),
-            template=lambda acc, n: f"If {n} is prime, append it to this list: {acc.items}.",
+            template=lambda acc,
+            n: f"If {n} is prime, append it to this list: {acc.items}.",
             initial=List(items=[]),
             return_type=List,
         )
@@ -199,7 +215,8 @@ async def test_reduce_tu2(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> 
     with mocker.patch_llm():
         result = await reduce(
             people,
-            template=lambda acc, p: f"Add {p.university} to this set of universities: {acc.universities}.",
+            template=lambda acc,
+            p: f"Add {p.university} to this set of universities: {acc.universities}.",
             initial=Universities(universities=[]),
             return_type=Universities,
         )
@@ -266,7 +283,9 @@ def test_reduce_raises() -> None:
     with pytest.raises(ValueError, match="empty iterable"):
         reduce_sync([], template="What is {} + {}?", return_type=Number)
     with pytest.raises(ValueError, match="empty iterable"):
-        reduce_sync([], template="What is {} + {}?", return_type=Number, associative=True)
+        reduce_sync(
+            [], template="What is {} + {}?", return_type=Number, associative=True
+        )
 
 
 def test_reduce_box(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
@@ -293,5 +312,7 @@ def test_reduce_box(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
         return f"Add the number '{b.value}' to the set {a}."
 
     with mocker.patch_llm():
-        result: Box[str] | str = reduce_sync(map(Box, items), template=template, associative=True)
+        result: Box[str] | str = reduce_sync(
+            map(Box, items), template=template, associative=True
+        )
     assert result == "{1, 2, 3}"

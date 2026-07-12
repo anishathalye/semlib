@@ -29,14 +29,20 @@ async def test_base_no_cache(llm_mocker: Callable[[dict[str, str]], LLMMocker]) 
     )
 
     with mocker.patch_llm():
-        result1: str = await base._acompletion(messages=[Message(role="user", content="What is 1 + 1?")])  # noqa: SLF001
+        result1: str = await base._acompletion(
+            messages=[Message(role="user", content="What is 1 + 1?")]
+        )  # noqa: SLF001
         assert result1 == "2"
         assert base.total_cost() == 1.0
-        result2: str = await base._acompletion(messages=[Message(role="user", content="What is 2 + 2?")])  # noqa: SLF001
+        result2: str = await base._acompletion(
+            messages=[Message(role="user", content="What is 2 + 2?")]
+        )  # noqa: SLF001
         assert result2 == "4"
         assert base.total_cost() == 2.0
         # repeat query, still incurs cost because no cache
-        result2 = await base._acompletion(messages=[Message(role="user", content="What is 2 + 2?")])  # noqa: SLF001
+        result2 = await base._acompletion(
+            messages=[Message(role="user", content="What is 2 + 2?")]
+        )  # noqa: SLF001
         assert result2 == "4"
         assert base.total_cost() == 3.0
 
@@ -54,26 +60,35 @@ async def test_base_cache(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> 
     )
 
     with mocker.patch_llm():
-        result1: str = await base._acompletion(messages=[Message(role="user", content="What is 1 + 1?")])  # noqa: SLF001
+        result1: str = await base._acompletion(
+            messages=[Message(role="user", content="What is 1 + 1?")]
+        )  # noqa: SLF001
         assert result1 == "2"
         assert base.total_cost() == 1.0
-        result2: str = await base._acompletion(messages=[Message(role="user", content="What is 2 + 2?")])  # noqa: SLF001
+        result2: str = await base._acompletion(
+            messages=[Message(role="user", content="What is 2 + 2?")]
+        )  # noqa: SLF001
         assert result2 == "4"
         assert base.total_cost() == 2.0
         # repeat query, doesn't incur additional cost
-        result2 = await base._acompletion(messages=[Message(role="user", content="What is 2 + 2?")])  # noqa: SLF001
+        result2 = await base._acompletion(
+            messages=[Message(role="user", content="What is 2 + 2?")]
+        )  # noqa: SLF001
         assert result2 == "4"
         assert base.total_cost() == 2.0
         # but it does when the model is different
         result2 = await base._acompletion(  # noqa: SLF001
-            messages=[Message(role="user", content="What is 2 + 2?")], model="gpt-4.1-nano"
+            messages=[Message(role="user", content="What is 2 + 2?")],
+            model="gpt-4.1-nano",
         )
         assert result2 == "4"
         assert base.total_cost() == 3.0
 
 
 @pytest.mark.asyncio
-async def test_base_return_type(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
+async def test_base_return_type(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker],
+) -> None:
     class Person(pydantic.BaseModel):
         name: str
         date_of_birth: datetime.date
@@ -90,16 +105,30 @@ async def test_base_return_type(llm_mocker: Callable[[dict[str, str]], LLMMocker
 
     with mocker.patch_llm():
         result1: Person = await base._acompletion(  # noqa: SLF001
-            messages=[Message(role="user", content="Who was the 40th president of the United States?")],
+            messages=[
+                Message(
+                    role="user",
+                    content="Who was the 40th president of the United States?",
+                )
+            ],
             return_type=Person,
         )
-        assert result1 == Person(name="Ronald Reagan", date_of_birth=datetime.date(1911, 2, 6))
+        assert result1 == Person(
+            name="Ronald Reagan", date_of_birth=datetime.date(1911, 2, 6)
+        )
         assert base.total_cost() == 1.0
         result2: Person = await base._acompletion(  # noqa: SLF001
-            messages=[Message(role="user", content="Who was the 41th president of the United States?")],
+            messages=[
+                Message(
+                    role="user",
+                    content="Who was the 41th president of the United States?",
+                )
+            ],
             return_type=Person,
         )
-        assert result2 == Person(name="George H. W. Bush", date_of_birth=datetime.date(1924, 6, 12))
+        assert result2 == Person(
+            name="George H. W. Bush", date_of_birth=datetime.date(1924, 6, 12)
+        )
         assert base.total_cost() == 2.0
 
 
@@ -117,7 +146,9 @@ async def test_base_prompt(llm_mocker: Callable[[dict[str, str]], LLMMocker]) ->
 
 
 @pytest.mark.asyncio
-async def test_base_prompt_typed(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
+async def test_base_prompt_typed(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker],
+) -> None:
     class Number(pydantic.BaseModel):
         value: int
 
@@ -163,13 +194,17 @@ async def test_base_raises(llm_mocker: Callable[[dict[str, str]], LLMMocker]) ->
 
 
 @pytest.mark.asyncio
-async def test_prompt_bare_cached(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
+async def test_prompt_bare_cached(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker],
+) -> None:
     mocker = llm_mocker(
         {
             "Populate the list": '{"primes": [2, 3, 5]}',
         }
     )
-    b: Bare[list[int]] = Bare(list[int], class_name="list_of_first_three", field_name="primes")
+    b: Bare[list[int]] = Bare(
+        list[int], class_name="list_of_first_three", field_name="primes"
+    )
     base = Base(cache=InMemoryCache())
     with mocker.patch_llm():
         x: list[int] = await base.prompt("Populate the list", return_type=b)
@@ -213,9 +248,14 @@ async def test_pending_requests_deduplication() -> None:
     base = Base(cache=InMemoryCache())
 
     async def coro() -> str:
-        return await base._acompletion(messages=[Message(role="user", content="What is the answer?")])  # noqa: SLF001
+        return await base._acompletion(
+            messages=[Message(role="user", content="What is the answer?")]
+        )  # noqa: SLF001
 
-    with patch("litellm.acompletion", side_effect=mock_acompletion), patch("litellm.completion_cost", return_value=1.0):
+    with (
+        patch("litellm.acompletion", side_effect=mock_acompletion),
+        patch("litellm.completion_cost", return_value=1.0),
+    ):
         res1, res2 = await gather(coro(), coro())
         assert res1 == "42"
         assert res2 == "42"

@@ -93,7 +93,9 @@ class Find(Base):
                 decision.decision = not decision.decision
             return item, decision.decision
 
-        tasks: list[asyncio.Task[tuple[T, bool]]] = [asyncio.create_task(fn(item)) for item in iterable]
+        tasks: list[asyncio.Task[tuple[T, bool]]] = [
+            asyncio.create_task(fn(item)) for item in iterable
+        ]
         try:
             for next_finished in asyncio.as_completed(tasks):
                 item, decision = await next_finished
@@ -120,7 +122,9 @@ async def find[T](
 ) -> T | None:
     """Standalone version of [find][semlib.find.Find.find]."""
     finder = Find(model=model, max_concurrency=max_concurrency)
-    result = await finder.find(iterable, by=by, to_str=to_str, template=template, negate=negate)
+    result = await finder.find(
+        iterable, by=by, to_str=to_str, template=template, negate=negate
+    )
     # binding to intermediate variable coro to avoid mypy bug, see https://github.com/python/mypy/issues/19716 and
     # https://github.com/python/mypy/pull/19767 (fixed now, but not shipped yet)
     return result  # noqa: RET504

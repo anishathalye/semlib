@@ -89,10 +89,15 @@ class OnDiskCache(QueryCache):
             )
             """
         )
-        cur = self._conn.execute("SELECT value FROM metadata WHERE key = ?", (_VERSION_KEY,))
+        cur = self._conn.execute(
+            "SELECT value FROM metadata WHERE key = ?", (_VERSION_KEY,)
+        )
         row = cur.fetchone()
         if row is None:
-            self._conn.execute("INSERT INTO metadata (key, value) VALUES (?, ?)", (_VERSION_KEY, _VERSION))
+            self._conn.execute(
+                "INSERT INTO metadata (key, value) VALUES (?, ?)",
+                (_VERSION_KEY, _VERSION),
+            )
         elif row[0] != _VERSION:
             msg = f"cache version mismatch: expected {_VERSION}, got {row[0]}"
             raise ValueError(msg)
@@ -114,7 +119,9 @@ class OnDiskCache(QueryCache):
 
     @override
     def _get[T: BaseModel](self, key: CacheKey[T]) -> str | None:
-        cur = self._conn.execute("SELECT value FROM data WHERE key = ?", (self._hash_key(key),))
+        cur = self._conn.execute(
+            "SELECT value FROM data WHERE key = ?", (self._hash_key(key),)
+        )
         row = cur.fetchone()
         if row is None:
             return None

@@ -34,7 +34,9 @@ class LLMMocker:
         def context_manager() -> ExitStack:
             stack = ExitStack()
             if os.getenv("SEMLIB_TEST_REAL_LLM") != "1":
-                stack.enter_context(patch("litellm.acompletion", side_effect=self.mock_acompletion))
+                stack.enter_context(
+                    patch("litellm.acompletion", side_effect=self.mock_acompletion)
+                )
             stack.enter_context(patch("litellm.completion_cost", return_value=1.0))
             return stack
 

@@ -35,7 +35,9 @@ class BordaCount(Algorithm):
 
         async def fn(item: tuple[int, int]) -> None:
             i, j = item
-            result_ij, result_ji = await util.gather(comparator(lst[i], lst[j]), comparator(lst[j], lst[i]))
+            result_ij, result_ji = await util.gather(
+                comparator(lst[i], lst[j]), comparator(lst[j], lst[i])
+            )
             if result_ij == Order.LESS and result_ji == Order.GREATER:
                 scores[j] += 1
                 scores[i] -= 1
@@ -46,9 +48,13 @@ class BordaCount(Algorithm):
         await foreach(
             fn,
             ((i, j) for i in range(len(lst)) for j in range(i + 1, len(lst))),
-            max_concurrency=max(1, max_concurrency // 2),  # because each worker does two comparisons concurrently
+            max_concurrency=max(
+                1, max_concurrency // 2
+            ),  # because each worker does two comparisons concurrently
         )
 
         # stable sort
-        sort_by_score = sorted([(scores[i], i, lst[i]) for i in range(len(lst))], reverse=reverse)
+        sort_by_score = sorted(
+            [(scores[i], i, lst[i]) for i in range(len(lst))], reverse=reverse
+        )
         return [item for _, _, item in sort_by_score]

@@ -48,13 +48,17 @@ async def test_prompt_bare(llm_mocker: Callable[[dict[str, str]], LLMMocker]) ->
 
 
 @pytest.mark.asyncio
-async def test_prompt_bare_named(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
+async def test_prompt_bare_named(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker],
+) -> None:
     mocker = llm_mocker(
         {
             "Return the list": '{"primes": [2, 3, 5]}',
         }
     )
-    b: Bare[list[int]] = Bare(list[int], class_name="list_of_length_3", field_name="primes")
+    b: Bare[list[int]] = Bare(
+        list[int], class_name="list_of_length_3", field_name="primes"
+    )
     with mocker.patch_llm():
         x: list[int] = await prompt("Return the list", return_type=b)
     assert x == [2, 3, 5]

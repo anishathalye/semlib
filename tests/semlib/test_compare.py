@@ -22,7 +22,9 @@ def test_compare(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
         assert compare_sync(1, 1, task="choose_greater_or_abstain") == Order.NEITHER
 
 
-def test_compare_choose_lesser(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
+def test_compare_choose_lesser(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker],
+) -> None:
     template = "Which is smaller, (a) {} or (b) {}?"
     mocker = llm_mocker(
         {
@@ -34,12 +36,29 @@ def test_compare_choose_lesser(llm_mocker: Callable[[dict[str, str]], LLMMocker]
     )
 
     with mocker.patch_llm():
-        assert compare_sync(2, 1, template=template, task=Task.CHOOSE_LESSER) == Order.GREATER
-        assert compare_sync(2, 1, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN) == Order.GREATER
-        assert compare_sync(1, 2, template=template, task=Task.CHOOSE_LESSER) == Order.LESS
-        assert compare_sync(1, 2, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN) == Order.LESS
-        assert compare_sync(1, 1, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN) == Order.NEITHER
-        assert compare_sync(3, 9, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN) == Order.NEITHER
+        assert (
+            compare_sync(2, 1, template=template, task=Task.CHOOSE_LESSER)
+            == Order.GREATER
+        )
+        assert (
+            compare_sync(2, 1, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN)
+            == Order.GREATER
+        )
+        assert (
+            compare_sync(1, 2, template=template, task=Task.CHOOSE_LESSER) == Order.LESS
+        )
+        assert (
+            compare_sync(1, 2, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN)
+            == Order.LESS
+        )
+        assert (
+            compare_sync(1, 1, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN)
+            == Order.NEITHER
+        )
+        assert (
+            compare_sync(3, 9, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN)
+            == Order.NEITHER
+        )
 
 
 def test_compare_compare(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
@@ -82,7 +101,9 @@ def test_compare_compare(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> N
 
 
 @pytest.mark.asyncio
-async def test_compare_callable(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
+async def test_compare_callable(
+    llm_mocker: Callable[[dict[str, str]], LLMMocker],
+) -> None:
     def template(a: int, b: int) -> str:
         return f"Which is greater, (a) {a} or (b) {b}?"
 
@@ -101,9 +122,16 @@ def test_compare_bad_args() -> None:
     with pytest.raises(ValueError, match="if 'task' is not"):
         compare_sync(1, 2, task=Task.CHOOSE_LESSER)
     with pytest.raises(ValueError, match="cannot provide"):
-        compare_sync(1, 2, template=lambda a, b: f"which is bigger, (a) {a} or (b) {b}?", to_str=str)
+        compare_sync(
+            1,
+            2,
+            template=lambda a, b: f"which is bigger, (a) {a} or (b) {b}?",
+            to_str=str,
+        )
     with pytest.raises(ValueError, match="cannot provide"):
-        compare_sync("car", "house", template="which is bigger, (a) {} or (b) {}?", by="weight")
+        compare_sync(
+            "car", "house", template="which is bigger, (a) {} or (b) {}?", by="weight"
+        )
 
 
 def test_compare_raises(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
