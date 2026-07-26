@@ -14,7 +14,7 @@ jobs:
     name: "Test: Python ${{ matrix.python }}"
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
       - uses: pypa/hatch@install
@@ -23,7 +23,7 @@ jobs:
       - name: Generate coverage report
         run: hatch run coverage:xml
       - name: Upload coverage report
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -36,7 +36,7 @@ jobs:
     name: "Type check: Python ${{ matrix.python }}"
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
       - uses: pypa/hatch@install
