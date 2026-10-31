@@ -8,9 +8,7 @@ from tests.conftest import LLMMocker
 
 
 @pytest.mark.parametrize("negate", [True, False])
-def test_filter(
-    llm_mocker: Callable[[dict[str, str]], LLMMocker], negate: bool
-) -> None:  # noqa: FBT001
+def test_filter(llm_mocker: Callable[[dict[str, str]], LLMMocker], negate: bool) -> None:
     people = [
         "Barack Obama",
         "Miley Cyrus",
@@ -21,24 +19,12 @@ def test_filter(
     ]
     mocker = llm_mocker(
         {
-            _DEFAULT_TEMPLATE.format(
-                item="Barack Obama", by="president of the United States"
-            ): '{"decision": true}',
-            _DEFAULT_TEMPLATE.format(
-                item="Miley Cyrus", by="president of the United States"
-            ): '{"decision": false}',
-            _DEFAULT_TEMPLATE.format(
-                item="Jeff Dean", by="president of the United States"
-            ): '{"decision": false}',
-            _DEFAULT_TEMPLATE.format(
-                item="Jeff Bezos", by="president of the United States"
-            ): '{"decision": false}',
-            _DEFAULT_TEMPLATE.format(
-                item="Bill Clinton", by="president of the United States"
-            ): '{"decision": true}',
-            _DEFAULT_TEMPLATE.format(
-                item="Elon Musk", by="president of the United States"
-            ): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Barack Obama", by="president of the United States"): '{"decision": true}',
+            _DEFAULT_TEMPLATE.format(item="Miley Cyrus", by="president of the United States"): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Jeff Dean", by="president of the United States"): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Jeff Bezos", by="president of the United States"): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Bill Clinton", by="president of the United States"): '{"decision": true}',
+            _DEFAULT_TEMPLATE.format(item="Elon Musk", by="president of the United States"): '{"decision": false}',
         }
     )
     with mocker.patch_llm():
@@ -93,9 +79,7 @@ async def test_filter_callable(
         }
     )
     with mocker.patch_llm():
-        result = await filter(
-            pairs, template=lambda pair: f"Is {pair[0]} the reverse of {pair[1]}?"
-        )
+        result = await filter(pairs, template=lambda pair: f"Is {pair[0]} the reverse of {pair[1]}?")
     assert result == [(123, 321), (12, 21)]
 
 
@@ -112,15 +96,9 @@ def test_filter_raises(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> Non
     people = ["Barack Obama", "Miley Cyrus", "Jeff Dean"]
     mocker = llm_mocker(
         {
-            _DEFAULT_TEMPLATE.format(
-                item="Barack Obama", by="president of the United States"
-            ): "not json",
-            _DEFAULT_TEMPLATE.format(
-                item="Miley Cyrus", by="president of the United States"
-            ): '{"decision": false}',
-            _DEFAULT_TEMPLATE.format(
-                item="Jeff Dean", by="president of the United States"
-            ): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Barack Obama", by="president of the United States"): "not json",
+            _DEFAULT_TEMPLATE.format(item="Miley Cyrus", by="president of the United States"): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Jeff Dean", by="president of the United States"): '{"decision": false}',
         }
     )
     with mocker.patch_llm(), pytest.raises(pydantic.ValidationError):

@@ -29,20 +29,14 @@ async def test_base_no_cache(llm_mocker: Callable[[dict[str, str]], LLMMocker]) 
     )
 
     with mocker.patch_llm():
-        result1: str = await base._acompletion(
-            messages=[Message(role="user", content="What is 1 + 1?")]
-        )  # noqa: SLF001
+        result1: str = await base._acompletion(messages=[Message(role="user", content="What is 1 + 1?")])
         assert result1 == "2"
         assert base.total_cost() == 1.0
-        result2: str = await base._acompletion(
-            messages=[Message(role="user", content="What is 2 + 2?")]
-        )  # noqa: SLF001
+        result2: str = await base._acompletion(messages=[Message(role="user", content="What is 2 + 2?")])
         assert result2 == "4"
         assert base.total_cost() == 2.0
         # repeat query, still incurs cost because no cache
-        result2 = await base._acompletion(
-            messages=[Message(role="user", content="What is 2 + 2?")]
-        )  # noqa: SLF001
+        result2 = await base._acompletion(messages=[Message(role="user", content="What is 2 + 2?")])
         assert result2 == "4"
         assert base.total_cost() == 3.0
 
@@ -60,24 +54,18 @@ async def test_base_cache(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> 
     )
 
     with mocker.patch_llm():
-        result1: str = await base._acompletion(
-            messages=[Message(role="user", content="What is 1 + 1?")]
-        )  # noqa: SLF001
+        result1: str = await base._acompletion(messages=[Message(role="user", content="What is 1 + 1?")])
         assert result1 == "2"
         assert base.total_cost() == 1.0
-        result2: str = await base._acompletion(
-            messages=[Message(role="user", content="What is 2 + 2?")]
-        )  # noqa: SLF001
+        result2: str = await base._acompletion(messages=[Message(role="user", content="What is 2 + 2?")])
         assert result2 == "4"
         assert base.total_cost() == 2.0
         # repeat query, doesn't incur additional cost
-        result2 = await base._acompletion(
-            messages=[Message(role="user", content="What is 2 + 2?")]
-        )  # noqa: SLF001
+        result2 = await base._acompletion(messages=[Message(role="user", content="What is 2 + 2?")])
         assert result2 == "4"
         assert base.total_cost() == 2.0
         # but it does when the model is different
-        result2 = await base._acompletion(  # noqa: SLF001
+        result2 = await base._acompletion(
             messages=[Message(role="user", content="What is 2 + 2?")],
             model="gpt-4.1-nano",
         )
@@ -104,7 +92,7 @@ async def test_base_return_type(
     )
 
     with mocker.patch_llm():
-        result1: Person = await base._acompletion(  # noqa: SLF001
+        result1: Person = await base._acompletion(
             messages=[
                 Message(
                     role="user",
@@ -113,11 +101,9 @@ async def test_base_return_type(
             ],
             return_type=Person,
         )
-        assert result1 == Person(
-            name="Ronald Reagan", date_of_birth=datetime.date(1911, 2, 6)
-        )
+        assert result1 == Person(name="Ronald Reagan", date_of_birth=datetime.date(1911, 2, 6))
         assert base.total_cost() == 1.0
-        result2: Person = await base._acompletion(  # noqa: SLF001
+        result2: Person = await base._acompletion(
             messages=[
                 Message(
                     role="user",
@@ -126,9 +112,7 @@ async def test_base_return_type(
             ],
             return_type=Person,
         )
-        assert result2 == Person(
-            name="George H. W. Bush", date_of_birth=datetime.date(1924, 6, 12)
-        )
+        assert result2 == Person(name="George H. W. Bush", date_of_birth=datetime.date(1924, 6, 12))
         assert base.total_cost() == 2.0
 
 
@@ -165,7 +149,7 @@ async def test_base_prompt_typed(
 
 def test_base_ollama() -> None:
     base = Base(model="ollama/gemma3:12b")
-    assert base._max_concurrency == 1  # noqa: SLF001
+    assert base._max_concurrency == 1
 
 
 def test_base_bad_args() -> None:
@@ -187,7 +171,7 @@ async def test_base_raises(llm_mocker: Callable[[dict[str, str]], LLMMocker]) ->
         value: int
 
     with mocker.patch_llm(), pytest.raises(pydantic.ValidationError):
-        await base._acompletion(  # noqa: SLF001
+        await base._acompletion(
             messages=[Message(role="user", content="What is 1 + 1?")],
             return_type=Number,
         )
@@ -202,9 +186,7 @@ async def test_prompt_bare_cached(
             "Populate the list": '{"primes": [2, 3, 5]}',
         }
     )
-    b: Bare[list[int]] = Bare(
-        list[int], class_name="list_of_first_three", field_name="primes"
-    )
+    b: Bare[list[int]] = Bare(list[int], class_name="list_of_first_three", field_name="primes")
     base = Base(cache=InMemoryCache())
     with mocker.patch_llm():
         x: list[int] = await base.prompt("Populate the list", return_type=b)
@@ -216,7 +198,7 @@ async def test_prompt_bare_cached(
 def test_base_env_max_concurrency() -> None:
     os.environ["SEMLIB_MAX_CONCURRENCY"] = "7"
     base = Base()
-    assert base._max_concurrency == 7  # noqa: SLF001
+    assert base._max_concurrency == 7
 
     os.environ["SEMLIB_MAX_CONCURRENCY"] = "not_an_int"
     with pytest.raises(ValueError, match="must be an integer"):
@@ -248,9 +230,7 @@ async def test_pending_requests_deduplication() -> None:
     base = Base(cache=InMemoryCache())
 
     async def coro() -> str:
-        return await base._acompletion(
-            messages=[Message(role="user", content="What is the answer?")]
-        )  # noqa: SLF001
+        return await base._acompletion(messages=[Message(role="user", content="What is the answer?")])
 
     with (
         patch("litellm.acompletion", side_effect=mock_acompletion),

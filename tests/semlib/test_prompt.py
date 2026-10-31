@@ -56,9 +56,7 @@ async def test_prompt_bare_named(
             "Return the list": '{"primes": [2, 3, 5]}',
         }
     )
-    b: Bare[list[int]] = Bare(
-        list[int], class_name="list_of_length_3", field_name="primes"
-    )
+    b: Bare[list[int]] = Bare(list[int], class_name="list_of_length_3", field_name="primes")
     with mocker.patch_llm():
         x: list[int] = await prompt("Return the list", return_type=b)
     assert x == [2, 3, 5]

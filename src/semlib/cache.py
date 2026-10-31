@@ -89,9 +89,7 @@ class OnDiskCache(QueryCache):
             )
             """
         )
-        cur = self._conn.execute(
-            "SELECT value FROM metadata WHERE key = ?", (_VERSION_KEY,)
-        )
+        cur = self._conn.execute("SELECT value FROM metadata WHERE key = ?", (_VERSION_KEY,))
         row = cur.fetchone()
         if row is None:
             self._conn.execute(
@@ -119,9 +117,7 @@ class OnDiskCache(QueryCache):
 
     @override
     def _get[T: BaseModel](self, key: CacheKey[T]) -> str | None:
-        cur = self._conn.execute(
-            "SELECT value FROM data WHERE key = ?", (self._hash_key(key),)
-        )
+        cur = self._conn.execute("SELECT value FROM data WHERE key = ?", (self._hash_key(key),))
         row = cur.fetchone()
         if row is None:
             return None

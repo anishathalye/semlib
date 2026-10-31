@@ -53,11 +53,7 @@ class QuickSort(Algorithm):
             greater = []
             equal = [pivot]  # to handle "neither" case
             comparisons = await util.gather(
-                *(
-                    comparator(item, pivot)
-                    for i, item in enumerate(lst)
-                    if i != pivot_index
-                )
+                *(comparator(item, pivot) for i, item in enumerate(lst) if i != pivot_index)
             )
             for i, item in enumerate(lst):
                 if i == pivot_index:
@@ -69,9 +65,7 @@ class QuickSort(Algorithm):
                     greater.append(item)
                 else:
                     equal.append(item)
-            sort_less, sort_greater = await util.gather(
-                quicksort(less), quicksort(greater)
-            )
+            sort_less, sort_greater = await util.gather(quicksort(less), quicksort(greater))
             return sort_less + equal + sort_greater
 
         sort_list = await quicksort(lst)

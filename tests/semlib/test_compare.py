@@ -36,29 +36,12 @@ def test_compare_choose_lesser(
     )
 
     with mocker.patch_llm():
-        assert (
-            compare_sync(2, 1, template=template, task=Task.CHOOSE_LESSER)
-            == Order.GREATER
-        )
-        assert (
-            compare_sync(2, 1, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN)
-            == Order.GREATER
-        )
-        assert (
-            compare_sync(1, 2, template=template, task=Task.CHOOSE_LESSER) == Order.LESS
-        )
-        assert (
-            compare_sync(1, 2, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN)
-            == Order.LESS
-        )
-        assert (
-            compare_sync(1, 1, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN)
-            == Order.NEITHER
-        )
-        assert (
-            compare_sync(3, 9, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN)
-            == Order.NEITHER
-        )
+        assert compare_sync(2, 1, template=template, task=Task.CHOOSE_LESSER) == Order.GREATER
+        assert compare_sync(2, 1, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN) == Order.GREATER
+        assert compare_sync(1, 2, template=template, task=Task.CHOOSE_LESSER) == Order.LESS
+        assert compare_sync(1, 2, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN) == Order.LESS
+        assert compare_sync(1, 1, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN) == Order.NEITHER
+        assert compare_sync(3, 9, template=template, task=Task.CHOOSE_LESSER_OR_ABSTAIN) == Order.NEITHER
 
 
 def test_compare_compare(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
@@ -129,9 +112,7 @@ def test_compare_bad_args() -> None:
             to_str=str,
         )
     with pytest.raises(ValueError, match="cannot provide"):
-        compare_sync(
-            "car", "house", template="which is bigger, (a) {} or (b) {}?", by="weight"
-        )
+        compare_sync("car", "house", template="which is bigger, (a) {} or (b) {}?", by="weight")
 
 
 def test_compare_raises(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:

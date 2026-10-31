@@ -12,7 +12,7 @@ from tests.conftest import LLMMocker
 
 
 @pytest.mark.parametrize("negate", [True, False])
-def test_find(llm_mocker: Callable[[dict[str, str]], LLMMocker], negate: bool) -> None:  # noqa: FBT001
+def test_find(llm_mocker: Callable[[dict[str, str]], LLMMocker], negate: bool) -> None:
     people = [
         "Barack Obama",
         "Miley Cyrus",
@@ -23,24 +23,12 @@ def test_find(llm_mocker: Callable[[dict[str, str]], LLMMocker], negate: bool) -
     ]
     mocker = llm_mocker(
         {
-            _DEFAULT_TEMPLATE.format(
-                item="Barack Obama", by="singer?"
-            ): '{"decision": false}',
-            _DEFAULT_TEMPLATE.format(
-                item="Miley Cyrus", by="singer?"
-            ): '{"decision": true}',
-            _DEFAULT_TEMPLATE.format(
-                item="Jeff Dean", by="singer?"
-            ): '{"decision": false}',
-            _DEFAULT_TEMPLATE.format(
-                item="Jeff Bezos", by="singer?"
-            ): '{"decision": false}',
-            _DEFAULT_TEMPLATE.format(
-                item="Bill Clinton", by="singer?"
-            ): '{"decision": false}',
-            _DEFAULT_TEMPLATE.format(
-                item="Elon Musk", by="singer?"
-            ): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Barack Obama", by="singer?"): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Miley Cyrus", by="singer?"): '{"decision": true}',
+            _DEFAULT_TEMPLATE.format(item="Jeff Dean", by="singer?"): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Jeff Bezos", by="singer?"): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Bill Clinton", by="singer?"): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Elon Musk", by="singer?"): '{"decision": false}',
         }
     )
     with mocker.patch_llm():
@@ -56,12 +44,8 @@ def test_find_not_found(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> No
     people = ["Miley Cyrus", "Jeff Dean"]
     mocker = llm_mocker(
         {
-            _DEFAULT_TEMPLATE.format(
-                item="Miley Cyrus", by="president of the United States"
-            ): '{"decision": false}',
-            _DEFAULT_TEMPLATE.format(
-                item="Jeff Dean", by="president of the United States"
-            ): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Miley Cyrus", by="president of the United States"): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Jeff Dean", by="president of the United States"): '{"decision": false}',
         }
     )
     with mocker.patch_llm():
@@ -110,9 +94,7 @@ async def test_find_callable(llm_mocker: Callable[[dict[str, str]], LLMMocker]) 
         }
     )
     with mocker.patch_llm():
-        result = await find(
-            pairs, template=lambda pair: f"Is {pair[0]} the reverse of {pair[1]}?"
-        )
+        result = await find(pairs, template=lambda pair: f"Is {pair[0]} the reverse of {pair[1]}?")
     assert result in {(123, 321), (12, 21)}
 
 
@@ -154,15 +136,9 @@ def test_find_raises(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
     people = ["Barack Obama", "Miley Cyrus", "Jeff Dean"]
     mocker = llm_mocker(
         {
-            _DEFAULT_TEMPLATE.format(
-                item="Barack Obama", by="president of the United States"
-            ): "not json",
-            _DEFAULT_TEMPLATE.format(
-                item="Miley Cyrus", by="president of the United States"
-            ): '{"decision": false}',
-            _DEFAULT_TEMPLATE.format(
-                item="Jeff Dean", by="president of the United States"
-            ): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Barack Obama", by="president of the United States"): "not json",
+            _DEFAULT_TEMPLATE.format(item="Miley Cyrus", by="president of the United States"): '{"decision": false}',
+            _DEFAULT_TEMPLATE.format(item="Jeff Dean", by="president of the United States"): '{"decision": false}',
         }
     )
 

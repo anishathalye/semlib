@@ -26,41 +26,27 @@ def test_sort(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
             _DEFAULT_TEMPLATE.format(a="1 mile", b="3 inches"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(a="1 mile", b="3 centimeters"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(a="1.4 kilometers", b="1 foot"): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE.format(
-                a="1.4 kilometers", b="3 inches"
-            ): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE.format(
-                a="1.4 kilometers", b="3 centimeters"
-            ): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE.format(a="1.4 kilometers", b="3 inches"): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE.format(a="1.4 kilometers", b="3 centimeters"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(a="1 foot", b="3 inches"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(a="1 foot", b="3 centimeters"): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE.format(
-                a="3 inches", b="3 centimeters"
-            ): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE.format(a="3 inches", b="3 centimeters"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(b="1 mile", a="1.4 kilometers"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 mile", a="1 foot"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 mile", a="3 inches"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 mile", a="3 centimeters"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1.4 kilometers", a="1 foot"): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE.format(
-                b="1.4 kilometers", a="3 inches"
-            ): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE.format(
-                b="1.4 kilometers", a="3 centimeters"
-            ): '{"choice": "B"}',
+            _DEFAULT_TEMPLATE.format(b="1.4 kilometers", a="3 inches"): '{"choice": "B"}',
+            _DEFAULT_TEMPLATE.format(b="1.4 kilometers", a="3 centimeters"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 foot", a="3 inches"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 foot", a="3 centimeters"): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE.format(
-                b="3 inches", a="3 centimeters"
-            ): '{"choice": "B"}',
+            _DEFAULT_TEMPLATE.format(b="3 inches", a="3 centimeters"): '{"choice": "B"}',
         }
     )
 
     sorter = Sort()
     with mocker.patch_llm():
-        sort_measurements: list[str] = asyncio.run(
-            sorter.sort(measurements, algorithm=QuickSort(randomized=False))
-        )
+        sort_measurements: list[str] = asyncio.run(sorter.sort(measurements, algorithm=QuickSort(randomized=False)))
     assert sort_measurements == [
         "3 centimeters",
         "3 inches",
@@ -87,9 +73,7 @@ async def test_sort_equal(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> 
         {
             _DEFAULT_TEMPLATE.format(a="12 inches", b="1 meter"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(a="1 foot", b="1 meter"): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE.format(
-                a="1 foot", b="12 inches"
-            ): '{"choice": "neither"}',
+            _DEFAULT_TEMPLATE.format(a="1 foot", b="12 inches"): '{"choice": "neither"}',
         }
     )
 
@@ -106,24 +90,12 @@ async def test_sort_equal(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> 
 def test_sort_by(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> None:
     mocker = llm_mocker(
         {
-            _DEFAULT_TEMPLATE_BY.format(
-                criteria="wavelength", a="red", b="green"
-            ): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE_BY.format(
-                criteria="wavelength", a="red", b="blue"
-            ): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE_BY.format(
-                criteria="wavelength", a="green", b="blue"
-            ): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE_BY.format(
-                criteria="wavelength", a="green", b="red"
-            ): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE_BY.format(
-                criteria="wavelength", a="blue", b="red"
-            ): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE_BY.format(
-                criteria="wavelength", a="blue", b="green"
-            ): '{"choice": "B"}',
+            _DEFAULT_TEMPLATE_BY.format(criteria="wavelength", a="red", b="green"): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE_BY.format(criteria="wavelength", a="red", b="blue"): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE_BY.format(criteria="wavelength", a="green", b="blue"): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE_BY.format(criteria="wavelength", a="green", b="red"): '{"choice": "B"}',
+            _DEFAULT_TEMPLATE_BY.format(criteria="wavelength", a="blue", b="red"): '{"choice": "B"}',
+            _DEFAULT_TEMPLATE_BY.format(criteria="wavelength", a="blue", b="green"): '{"choice": "B"}',
         }
     )
     colors = ["red", "green", "blue"]
@@ -139,12 +111,8 @@ async def test_sort_raises_quicksort(
     mocker = llm_mocker(
         {
             _DEFAULT_TEMPLATE.format(a="12 inches", b="1 meter"): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE.format(
-                a="1 foot", b="1 meter"
-            ): '{"choice": "1 meter"}',  # invalid
-            _DEFAULT_TEMPLATE.format(
-                a="1 foot", b="12 inches"
-            ): '{"choice": "neither"}',
+            _DEFAULT_TEMPLATE.format(a="1 foot", b="1 meter"): '{"choice": "1 meter"}',  # invalid
+            _DEFAULT_TEMPLATE.format(a="1 foot", b="12 inches"): '{"choice": "neither"}',
         }
     )
 
@@ -159,12 +127,8 @@ async def test_sort_raises_borda_count(
 ) -> None:
     mocker = llm_mocker(
         {
-            _DEFAULT_TEMPLATE.format(
-                a="12 inches", b="1 meter"
-            ): '{"choice": "invalid"}',
-            _DEFAULT_TEMPLATE.format(
-                a="1 meter", b="12 inches"
-            ): '{"choice": "invalid"}',
+            _DEFAULT_TEMPLATE.format(a="12 inches", b="1 meter"): '{"choice": "invalid"}',
+            _DEFAULT_TEMPLATE.format(a="1 meter", b="12 inches"): '{"choice": "invalid"}',
         }
     )
 

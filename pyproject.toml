@@ -100,3 +100,7 @@ extend-include = [
   "T201", # print
   "PLE1142", # top-level await
 ]
+"tests/**/*" = [
+  "FBT001", # boolean-typed positional arguments
+  "SLF001", # private member access
+]

@@ -46,9 +46,7 @@ class Bare[T]:
         self._class_name = class_name if class_name is not None else typ.__name__
         self._field_name = field_name if field_name is not None else "value"
         field_definitions: Any = {self._field_name: (self._typ, ...)}
-        self._model: type[pydantic.BaseModel] = pydantic.create_model(
-            self._class_name, **field_definitions
-        )
+        self._model: type[pydantic.BaseModel] = pydantic.create_model(self._class_name, **field_definitions)
 
     def _extract(self, obj: Any) -> T:
         if isinstance(obj, self._model):

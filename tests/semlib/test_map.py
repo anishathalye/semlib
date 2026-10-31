@@ -56,9 +56,7 @@ def test_map_structured_output(
     assert result == [
         Person(name="Ronald Reagan", date_of_birth=datetime.date(1911, 2, 6)),
         Person(name="George H. W. Bush", date_of_birth=datetime.date(1924, 6, 12)),
-        Person(
-            name="William Jefferson Clinton", date_of_birth=datetime.date(1946, 8, 19)
-        ),
+        Person(name="William Jefferson Clinton", date_of_birth=datetime.date(1946, 8, 19)),
         Person(name="George W. Bush", date_of_birth=datetime.date(1946, 7, 6)),
     ]
 

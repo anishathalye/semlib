@@ -29,9 +29,7 @@ async def test_no_match_raises_error(
 
     with (
         mocker.patch_llm(),
-        pytest.raises(
-            ValueError, match="no mock response found for prompt: Goodbye world"
-        ),
+        pytest.raises(ValueError, match="no mock response found for prompt: Goodbye world"),
     ):
         await litellm.acompletion(
             model="gpt-3.5-turbo",
@@ -48,10 +46,6 @@ async def test_partial_match_does_not_work(
 
     with (
         mocker.patch_llm(),
-        pytest.raises(
-            ValueError, match="no mock response found for prompt: Hello world"
-        ),
+        pytest.raises(ValueError, match="no mock response found for prompt: Hello world"),
     ):
-        await litellm.acompletion(
-            model="gpt-3.5-turbo", messages=[{"role": "user", "content": "Hello world"}]
-        )
+        await litellm.acompletion(model="gpt-3.5-turbo", messages=[{"role": "user", "content": "Hello world"}])

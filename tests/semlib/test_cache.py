@@ -7,8 +7,6 @@ from pydantic import BaseModel
 
 from semlib.cache import _VERSION, _VERSION_KEY, InMemoryCache, OnDiskCache, QueryCache
 
-# ruff: noqa: SLF001
-
 
 def test_in_memory_cache() -> None:
     cache: QueryCache = InMemoryCache()
@@ -38,9 +36,7 @@ def test_on_disk_cache(tmp_path: pathlib.Path) -> None:
 
     # check version mismatch
     conn = sqlite3.connect(str(cache_path), autocommit=True)
-    conn.execute(
-        f"UPDATE metadata SET value = '{int(_VERSION) + 1}' WHERE key = '{_VERSION_KEY}'"
-    )
+    conn.execute(f"UPDATE metadata SET value = '{int(_VERSION) + 1}' WHERE key = '{_VERSION_KEY}'")
     conn.close()
     with pytest.raises(ValueError, match="cache version mismatch"):
         OnDiskCache(str(cache_path))

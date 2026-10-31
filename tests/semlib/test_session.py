@@ -28,33 +28,21 @@ async def test_session(llm_mocker: Callable[[dict[str, str]], LLMMocker]) -> Non
             _DEFAULT_TEMPLATE.format(a="1 mile", b="3 inches"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(a="1 mile", b="3 centimeters"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(a="1.4 kilometers", b="1 foot"): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE.format(
-                a="1.4 kilometers", b="3 inches"
-            ): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE.format(
-                a="1.4 kilometers", b="3 centimeters"
-            ): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE.format(a="1.4 kilometers", b="3 inches"): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE.format(a="1.4 kilometers", b="3 centimeters"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(a="1 foot", b="3 inches"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(a="1 foot", b="3 centimeters"): '{"choice": "A"}',
-            _DEFAULT_TEMPLATE.format(
-                a="3 inches", b="3 centimeters"
-            ): '{"choice": "A"}',
+            _DEFAULT_TEMPLATE.format(a="3 inches", b="3 centimeters"): '{"choice": "A"}',
             _DEFAULT_TEMPLATE.format(b="1 mile", a="1.4 kilometers"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 mile", a="1 foot"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 mile", a="3 inches"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 mile", a="3 centimeters"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1.4 kilometers", a="1 foot"): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE.format(
-                b="1.4 kilometers", a="3 inches"
-            ): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE.format(
-                b="1.4 kilometers", a="3 centimeters"
-            ): '{"choice": "B"}',
+            _DEFAULT_TEMPLATE.format(b="1.4 kilometers", a="3 inches"): '{"choice": "B"}',
+            _DEFAULT_TEMPLATE.format(b="1.4 kilometers", a="3 centimeters"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 foot", a="3 inches"): '{"choice": "B"}',
             _DEFAULT_TEMPLATE.format(b="1 foot", a="3 centimeters"): '{"choice": "B"}',
-            _DEFAULT_TEMPLATE.format(
-                b="3 inches", a="3 centimeters"
-            ): '{"choice": "B"}',
+            _DEFAULT_TEMPLATE.format(b="3 inches", a="3 centimeters"): '{"choice": "B"}',
             "Convert the length 1 mile to centimeters, rounding to the nearest integer.": '{"centimeters": 160934}',
             "Convert the length 1.4 kilometers to centimeters, rounding to the nearest integer.": '{"centimeters": 140000}',
             "Convert the length 1 foot to centimeters, rounding to the nearest integer.": '{"centimeters": 30}',

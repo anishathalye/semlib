@@ -84,9 +84,7 @@ class Sort(Compare):
         algorithm = algorithm if algorithm is not None else BordaCount()
 
         async def comparator(a: T, b: T) -> Order:
-            return await self.compare(
-                a, b, by=by, to_str=to_str, template=template, task=task, model=model
-            )
+            return await self.compare(a, b, by=by, to_str=to_str, template=template, task=task, model=model)
 
         return await algorithm._sort(  # noqa: SLF001
             iterable,
