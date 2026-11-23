@@ -39,7 +39,7 @@ This library provides an alternative. You can structure your computation using t
 **Latency.** By breaking down the computation into smaller pieces and structuring it using functional programming primitives like `map` and `reduce`, the parts of the computation can be run concurrently, reducing the latency of the overall computation.
  (example: tree [reduce](https://semlib.anish.io/api/#semlib.Session.reduce) with O(log n) computation depth in [Disneyland Reviews Synthesis](https://semlib.anish.io/examples/disneyland-reviews/))
 
-**Cost.** By breaking down the computation into simpler sub-tasks, you can use smaller and cheaper models that are capable of solving those sub-tasks, which can reduce data processing costs. Furthermore, you can choose the model on a per-subtask basis, allowing you to further optimize costs. (example: using `gpt-4.1-nano` for the pre-filtering step in [arXiv Paper Recommendations](https://semlib.anish.io/examples/arxiv-recommendations/))
+**Cost.** By breaking down the computation into simpler sub-tasks, you can use smaller and cheaper models that are capable of solving those sub-tasks, which can reduce data processing costs. Furthermore, you can choose the model on a per-subtask basis, allowing you to further optimize costs. (example: using `gpt-5.6-luna` for the pre-filtering step in [arXiv Paper Recommendations](https://semlib.anish.io/examples/arxiv-recommendations/))
 
 **Security.** By breaking down the computation into tasks that simpler models can handle, you can use open models that you host yourself, allowing you to process sensitive data without having to trust a third party. (example: using `gpt-oss` and `qwen3` in [Resume Filtering](https://semlib.anish.io/examples/resume-filtering/))
 
